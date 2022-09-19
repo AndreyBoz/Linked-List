@@ -2,7 +2,6 @@
 {
     public class Item<T> {
         private T data = default(T);
-        
         public T Data {
             get => data;
             set { 

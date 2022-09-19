@@ -19,6 +19,19 @@ namespace Linked_List.Model
         {
             SetHeadAndTail(data);
         }
+        public T this[int index] {
+            get {
+                if (index < 0) throw new ArgumentOutOfRangeException();
+                var current = Head;
+                for (int i = 0; i < index; i++)
+                {
+                    if (current.Next == null)
+                        throw new ArgumentOutOfRangeException();
+                    current = current.Next;
+                }
+                return current.Data;
+            }
+        }
         public void Add(T data) {
             if (Tail != null)
             {
@@ -31,36 +44,8 @@ namespace Linked_List.Model
                 SetHeadAndTail(data);
             } 
         }
-        public void Delete(T data)
+        public void AppendHead(T data)
         {
-            if (Head != null)
-            {
-                if (Head.Data.Equals(data))
-                {
-                    Head = Head.Next;
-                    Count--;
-                    return;
-                }
-                var current = Head.Next;
-                var previous = Head.Next;
-                while (current != null)
-                {
-                    if (current.Data.Equals(data))
-                    {
-                        previous.Next = current.Next;
-                        Count--;
-                        return;
-
-                    }
-                    previous = current;
-                    current = current.Next;
-                }
-            }
-            else {
-                SetHeadAndTail(data);
-            }
-        }
-        public void AppendHead(T data) {
 
             var item = new Item<T>(data);
             item.Next = Head;
@@ -68,30 +53,100 @@ namespace Linked_List.Model
 
             Count++;
         }
-        public void InsertAfter(T target, T data) {
+        public void InsertAfter(int index, T data)
+        {
             if (Head != null)
             {
-           
+
                 var current = Head;
-                while (current != null)
+
+                for (int i = 0; i < index - 1; i++)
                 {
-                    if (current.Data.Equals(target))
+                    current = current.Next;
+                }
+
+                var item = new Item<T>(data);
+                item.Next = current.Next;
+                current.Next = item;
+                Count++;
+            }
+        }
+        public void Delete(int index)
+        {
+            if (Head != null)
+            {
+                if (index == 0)
+                {
+                    DeleteFirst();
+                    return;
+                }
+                var current = Head;
+                for(int i = 0; i < index; i++)
+                {
+                    if (current.Next.Equals(Tail))
                     {
-                        var item = new Item<T>(data);
-                        item.Next = current.Next;
-                        current.Next = item;
-                        Count++;
+                        current.Next = null;
+                        Tail = current;
+                        Count--;
                         return;
                     }
-                    else
-                    {
-                        current = current.Next;
+                    current = current.Next;
+                }
+                current.Next = current.Next.Next;
+                Count--;
+            }
+        }
+        public void DeleteFirst() {
+            if (Head != null) {
+                Head = Head.Next;
+                Count--;
+            }
+        }
+        public void DeleteLast() {
+            if (Tail != null) {
+                var current = Head;
+                while(current != null)
+                {
+                    if (current.Next.Equals(Tail)) {
+                        current.Next = null;
+                        Tail = current;
+                        Count--;
+                        return;
                     }
+                    current=current.Next;
                 }
             }
         }
+        public void ChangeElement(int index,T data) {
+            
+            if (Head != null)
+            {
+                if (index < 0) throw new ArgumentOutOfRangeException();
+                var current = Head;
+                for (int i = 0; i < index; i++)
+                {
+                    if (current.Next == null)
+                        throw new ArgumentOutOfRangeException();
+                    current = current.Next;
+                }
+                current.Data = data;
+            }
+        }
+        public bool IsEmpty() {
+            return Head == null ?  true :  false;
+        }
+        
         public void Clear() {
             DeleteAll();    
+        }
+        public void AddList(LinkedList<T> list) {
+            if (Head != null && list.Head != null)
+            {
+                Tail.Next = list.Head;
+                Tail = list.Tail;
+
+            }
+            
         }
         private void DeleteAll() {
             Head = null;
