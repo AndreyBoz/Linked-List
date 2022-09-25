@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Linked_List.Model
 {
-    public class LinkedList<T>: IEnumerable
+    public class LinkedList<T>
     {
         public Item<T> Head { get; private set; }
         public Item<T> Tail { get; private set; }
@@ -142,6 +140,7 @@ namespace Linked_List.Model
         public void AddList(LinkedList<T> list) {
             if (Head != null && list.Head != null)
             {
+                Count+=list.Count;
                 Tail.Next = list.Head;
                 Tail = list.Tail;
 
@@ -158,16 +157,6 @@ namespace Linked_List.Model
             Head = item;
             Tail = item;
             Count = 1;
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            var current = Head;
-            while (current != null)
-            {
-                yield return current.Data;
-                current = current.Next;
-            }
         }
         public override string ToString()
         {
